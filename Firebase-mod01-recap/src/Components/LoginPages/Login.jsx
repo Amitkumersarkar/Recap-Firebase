@@ -1,10 +1,17 @@
-import { GoogleAuthProvider } from "firebase/auth";
-
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import auth from "../../firebase.config";
 const Login = () => {
     // declared google provider
     const provider = new GoogleAuthProvider();
     const handleSigninWithGoogle = () => {
-        console.log('wait');
+        // integrate sign in method
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                console.log(result);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
     return (
         <div className="hero bg-base-200 min-h-screen">
