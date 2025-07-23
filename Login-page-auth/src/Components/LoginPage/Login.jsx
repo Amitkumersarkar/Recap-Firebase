@@ -1,16 +1,23 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import auth from "../Firebase/Firebase.config";
+import { useState } from "react";
 
 const Login = () => {
+
+    // declared state
+    const [user, setUser] = useState(null);
+
     const provider = new GoogleAuthProvider();
 
     const handleLoginWithGoogle = () => {
         signInWithPopup(auth, provider)
             .then((result) => {
-                console.log(result);
+                console.log(result.user);
+                setUser(result.user);
             })
             .catch((error) => {
-                console.log(error);
+                console.log('Error', error);
+                setUser(null);
             })
     }
     return (
@@ -31,6 +38,18 @@ const Login = () => {
                             <input type="password" className="input" placeholder="Password" />
                             <div><a className="link link-hover">Forgot password?</a></div>
                             <button onClick={handleLoginWithGoogle} className="btn btn-neutral mt-4">Login</button>
+                            {
+                                // showing user info by condition
+                                user && <div>
+                                    <h2>
+                                        {user.displayName}
+                                    </h2>
+                                    <h2>{user.email}</h2>
+                                    <div>
+                                        <img src={user.photoURL} alt="" />
+                                    </div>
+                                </div>
+                            }
                         </fieldset>
                     </div>
                 </div>
