@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import auth from "../Firebase/Firebase.config";
 import { useState } from "react";
 
@@ -20,6 +20,18 @@ const Login = () => {
                 setUser(null);
             })
     }
+    // signout 
+    const handleSignOut = () => {
+        signOut(auth)
+            .then(() => {
+                console.log('signout done');
+                // reset user
+                setUser(null);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
     return (
         <div className="hero bg-base-200 min-h-screen">
             <div className="hero-content flex-col">
@@ -37,7 +49,13 @@ const Login = () => {
                             <label className="label">Password</label>
                             <input type="password" className="input" placeholder="Password" />
                             <div><a className="link link-hover">Forgot password?</a></div>
-                            <button onClick={handleLoginWithGoogle} className="btn btn-neutral mt-4">Login</button>
+                            {/* <button onClick={handleLoginWithGoogle} className="btn btn-neutral mt-4">Login</button> */}
+                            {/* <button onClick={handleSignOut} className="btn btn-primary">LogOut</button> */}
+
+                            {/*signout signin conditional method */}
+                            {
+                                user ? <button onClick={handleSignOut} className="btn btn-primary">LogOut</button> : <button onClick={handleLoginWithGoogle} className="btn btn-neutral mt-4">Login</button>
+                            }
                             {
                                 // showing user info by condition
                                 user && <div>
