@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { GithubAuthProvider, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import auth from "../Firebase/Firebase.config";
 import { useState } from "react";
 
@@ -8,6 +8,8 @@ const Login = () => {
     const [user, setUser] = useState(null);
 
     const provider = new GoogleAuthProvider();
+    // declared github auth provider
+    const githubProvider = new GithubAuthProvider();
 
     const handleLoginWithGoogle = () => {
         signInWithPopup(auth, provider)
@@ -32,6 +34,17 @@ const Login = () => {
                 console.log(error);
             })
     }
+    // github integration
+    const handleWithGithub = () => {
+        signInWithPopup(auth, githubProvider)
+            .then((result) => {
+                console.log(result.user);
+                setUser(result.user)
+            })
+            .catch((err) => {
+                console.log('Error', err);
+            })
+    }
     return (
         <div className="hero bg-base-200 min-h-screen">
             <div className="hero-content flex-col">
@@ -54,7 +67,10 @@ const Login = () => {
 
                             {/*signout signin conditional method */}
                             {
-                                user ? <button onClick={handleSignOut} className="btn btn-primary">LogOut</button> : <button onClick={handleLoginWithGoogle} className="btn btn-neutral mt-4">Login</button>
+                                user ? <button onClick={handleSignOut} className="btn btn-primary">LogOut</button> : <>
+                                    <button onClick={handleLoginWithGoogle} className="btn btn-neutral mt-4">Login</button>
+                                    <button onClick={handleWithGithub} className="btn btn-ghost">Login With Github</button>
+                                </>
                             }
                             {
                                 // showing user info by condition
