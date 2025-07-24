@@ -20,9 +20,9 @@ const Navbar = () => {
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
                         <Link to='/signup'>
-                            <a className="justify-between">
-                                SignUp
-                            </a>
+                            <li>
+                                <a className="justify-between">  SignUp</a>
+                            </li>
                         </Link>
                         <Link to='/login'>
                             <li><a>LogIn</a></li>
