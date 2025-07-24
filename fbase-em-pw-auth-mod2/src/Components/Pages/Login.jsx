@@ -1,7 +1,11 @@
 import { NavLink } from "react-router-dom";
 
 const Login = () => {
-
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(e.target.email.value);
+        console.log(e.target.password.value);
+    }
     return (
         <div className="hero bg-base-200 min-h-screen">
             <div className="hero-content flex-col">
@@ -12,17 +16,19 @@ const Login = () => {
                     </p>
                 </div>
                 <div className="card bg-cyan-500 w-full max-w-sm shrink-0 shadow-2xl">
-                    <div className="card-body">
-                        <fieldset className="fieldset">
-                            <label className="label font-semibold">Email</label>
-                            <input type="email" className="input" placeholder="Email" />
-                            <label className="label font-semibold">Password</label>
-                            <input type="password" className="input" placeholder="Password" />
-                            <div><a className="link link-hover">Forgot password?</a></div>
-                            <button className="btn btn-neutral mt-4">Login</button>
-                            <NavLink to='/signup'> <p>Don't have accounts? <span className="text-blue-700 font-bold">SignUp</span></p></NavLink>
-                        </fieldset>
-                    </div>
+                    <form onSubmit={handleSubmit}>
+                        <div className="card-body">
+                            <fieldset className="fieldset">
+                                <label className="label font-semibold">Email</label>
+                                <input name="email" type="email" className="input" placeholder="Email" />
+                                <label className="label font-semibold">Password</label>
+                                <input name="password" type="password" className="input" placeholder="Password" />
+                                <div><a className="link link-hover">Forgot password?</a></div>
+                                <button className="btn btn-neutral mt-4">Login</button>
+                                <NavLink to='/signup'> <p>Don't have accounts? <span className="text-blue-700 font-bold">SignUp</span></p></NavLink>
+                            </fieldset>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
