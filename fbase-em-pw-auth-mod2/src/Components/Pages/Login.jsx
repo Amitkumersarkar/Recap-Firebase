@@ -4,6 +4,8 @@ import auth from "../../Firebase/Fbase.init";
 import { useState } from "react";
 
 const Login = () => {
+    // showing success message
+    const [success, setSuccess] = useState(false);
     // declared state for showing error message
     const [errorMessage, setErrorMessage] = useState('');
     const handleSubmit = (e) => {
@@ -14,16 +16,33 @@ const Login = () => {
 
         // reset error message
         setErrorMessage('');
+        setSuccess(false);
+        //checking password types
+        // console.log(typeof password);
+        // password validation in client side and return function here
+        if (password.length < 6) {
+            setErrorMessage('password should be 6 character or longer');
+            return;
 
+        }
+        // password validation by special character
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/;
+
+        if (!passwordRegex.test(password)) {
+            setErrorMessage('atLeast One upperCase ,One LowerCase, One Number,One Special Character');
+            return;
+        }
         // create user with email and password
         createUserWithEmailAndPassword(auth, email, password)
             .then((result) => {
                 console.log(result.user);
+                setSuccess(true);
             })
             .catch((error) => {
                 // const errorCode = error.code;
                 console.log('ERROR 404..!!', error.message);
                 setErrorMessage(error.message);
+                setSuccess(false);
             })
     }
     return (
@@ -45,13 +64,17 @@ const Login = () => {
                                 <input name="password" type="password" className="input" placeholder="Password" />
                                 <div><a className="link link-hover">Forgot password?</a></div>
                                 <button className="btn btn-neutral mt-4">Login</button>
-                                <NavLink to='/signup'> <p>Don't have accounts? <span className="text-blue-700 font-bold">SignUp</span></p></NavLink>
+                                <NavLink to='/signup'> <p className="text-center">Don't have accounts? <span className="text-blue-700 font-bold">SignUp</span></p></NavLink>
                             </fieldset>
                         </div>
                     </form>
                     {/* showing error message here */}
                     {
                         errorMessage && <p className="text-red-600 text-xs font-semibold text-center pb-2">{errorMessage}</p>
+                    }
+                    {/* showing success message */}
+                    {
+                        success && <p className="text-fuchsia-600 text-center">login successfully </p>
                     }
                 </div>
             </div>
