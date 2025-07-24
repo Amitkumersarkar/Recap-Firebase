@@ -1,10 +1,30 @@
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { NavLink } from "react-router-dom";
+import auth from "../../Firebase/Fbase.init";
+import { useState } from "react";
 
 const Login = () => {
+    // declared state for showing error message
+    const [errorMessage, setErrorMessage] = useState('');
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(e.target.email.value);
-        console.log(e.target.password.value);
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        console.log(email, password);
+
+        // reset error message
+        setErrorMessage('');
+
+        // create user with email and password
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((result) => {
+                console.log(result.user);
+            })
+            .catch((error) => {
+                // const errorCode = error.code;
+                console.log('ERROR 404..!!', error.message);
+                setErrorMessage(error.message);
+            })
     }
     return (
         <div className="hero bg-base-200 min-h-screen">
@@ -29,6 +49,10 @@ const Login = () => {
                             </fieldset>
                         </div>
                     </form>
+                    {/* showing error message here */}
+                    {
+                        errorMessage && <p className="text-red-600 text-xs font-semibold text-center pb-2">{errorMessage}</p>
+                    }
                 </div>
             </div>
         </div>
