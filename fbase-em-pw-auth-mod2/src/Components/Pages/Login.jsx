@@ -1,7 +1,7 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
 import { NavLink } from "react-router-dom";
 import auth from "../../Firebase/Fbase.init";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 const Login = () => {
@@ -11,6 +11,9 @@ const Login = () => {
     const [success, setSuccess] = useState(false);
     // declared state for showing error message
     const [errorMessage, setErrorMessage] = useState('');
+    // for reset password and set it in email field
+    const emailRef = useRef();
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const email = e.target.email.value;
@@ -44,7 +47,19 @@ const Login = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then((result) => {
                 console.log(result.user);
-                setSuccess(true);
+                // email verification by conditions
+                if (!result.user.emailVerified) {
+                    setErrorMessage('please verify your email address')
+                }
+                {
+
+                    setSuccess(true);
+                }
+                // send verification email address
+                sendEmailVerification(auth.currentUser)
+                    .then(() => {
+                        console.log('verification email send');
+                    })
             })
             .catch((error) => {
                 // const errorCode = error.code;
@@ -52,6 +67,21 @@ const Login = () => {
                 setErrorMessage(error.message);
                 setSuccess(false);
             })
+    }
+    // reset password
+    const handleForgetPassword = () => {
+        console.log('get me an email address', emailRef.current);
+        // check email here
+        const email = emailRef.current.value;
+        if (!email) {
+            console.log('please provide me a valid email')
+        }
+        else {
+            sendPasswordResetEmail(auth, email)
+                .then(() => {
+                    alert('reset email sent, please check your email');
+                })
+        }
     }
     return (
         <div className="hero bg-base-200 min-h-screen">
@@ -67,7 +97,7 @@ const Login = () => {
                         <div className="card-body">
                             <fieldset className="fieldset relative">
                                 <label className="label font-semibold">Email</label>
-                                <input name="email" type="email" className="input" placeholder="Email" />
+                                <input name="email" ref={emailRef} type="email" className="input" placeholder="Email" />
                                 <label className="label font-semibold">Password</label>
                                 {/* password icon and toggle by conditions */}
                                 <input
@@ -80,7 +110,9 @@ const Login = () => {
                                         showPassword ? <FaEyeSlash /> : <FaEye />
                                     }
                                 </button>
-                                <div><a className="link link-hover">Forgot password?</a></div>
+                                <label onClick={handleForgetPassword} className="label">
+                                    <div><a className="link link-hover">Forgot password?</a></div>
+                                </label>
                                 {/* checkbox */}
                                 {/* <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4"> */}
                                 <label className="label cursor-pointer pt-2">
