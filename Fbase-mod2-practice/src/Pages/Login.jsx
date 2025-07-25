@@ -1,11 +1,28 @@
 import { Link } from "react-router-dom";
-
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
 const Login = () => {
+    // declared state to show error message
+    const [errorMessage, setErrorMessage] = useState('');
     const handleSubmitForm = (e) => {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
         console.log(email, password);
+        // reset error message
+        setErrorMessage('');
+
+        // create signin method and authenticate
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((result) => {
+                console.log(result.user);
+
+            })
+            .catch((error) => {
+                console.log('Error 404', error.message);
+                setErrorMessage(error.message);
+            })
+
     }
     return (
 
@@ -31,6 +48,9 @@ const Login = () => {
                             </fieldset>
                         </div>
                     </form>
+                    {
+                        errorMessage && <p className="text-red-600 text-center font-semibold">{errorMessage}</p>
+                    }
                 </div>
             </div>
         </div>
