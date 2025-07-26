@@ -1,6 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import auth from '../Firebase/Firebase.init';
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 export const AuthContext = createContext(null);
 
 const Provider = ({ children }) => {
@@ -16,6 +16,26 @@ const Provider = ({ children }) => {
 
         return signInWithEmailAndPassword(auth, email, password);
     }
+    // sign out user
+    const signOutUser = () => {
+        return signOut(auth);
+    }
+    // useEffect to set observer
+    useEffect(() => {
+        // to kept information declared this
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            console.log('current user', currentUser);
+            setUser(currentUser);
+
+        })
+        // return something
+        return () => {
+            // call unsubscribe
+            unsubscribe();
+        }
+    }, [])
+
+
     // set an observer to stay logged in or not
     // onAuthStateChanged(auth, (currentUser) => {
     //     if (currentUser) {
@@ -31,9 +51,10 @@ const Provider = ({ children }) => {
     const name = 'tomato';
     const authInfo = {
         name,
+        user,
         createUser,
         signInUser,
-        user
+        signOutUser
     }
     return (
         <AuthContext.Provider value={authInfo}>
