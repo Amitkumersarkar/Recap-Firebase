@@ -20,7 +20,6 @@ const SignUp = () => {
             .catch((error) => {
                 console.log('error', error.message);
             })
-
     }
     return (
         <div className="hero bg-base-200 min-h-screen">
