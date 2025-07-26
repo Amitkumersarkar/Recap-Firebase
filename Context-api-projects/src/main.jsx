@@ -9,6 +9,7 @@ import Root from './Components/RootFile/Root';
 import HomePage from './Components/HomePage';
 import Login from './Components/Login';
 import Register from './Components/Register';
+import AuthProvider from './Providers/AuthProvider';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,9 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      {/* child element of authContext */}
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 )
